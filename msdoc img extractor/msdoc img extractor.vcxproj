@@ -204,6 +204,8 @@
     <ResourceCompile Include="msdocimgextractor.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.gitignore" />
+    <None Include="..\README.md" />
     <None Include="res\msdocimgextractor.rc2" />
   </ItemGroup>
   <ItemGroup>
