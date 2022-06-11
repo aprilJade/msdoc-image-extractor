@@ -8,6 +8,8 @@
 #include "msdoc img extractorDlg.h"
 #include "afxdialogex.h"
 
+#include "ZlibWrapper.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -83,6 +85,8 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
+
+	CZlibWrapper zlib;
 
 	return TRUE; 
 }
