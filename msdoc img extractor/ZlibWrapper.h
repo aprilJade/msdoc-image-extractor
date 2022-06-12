@@ -1,5 +1,6 @@
 #pragma once
-extern "C" {
+extern "C" 
+{
 #include "zlib.h"
 #pragma comment(lib, "zlib.lib")
 }
@@ -7,9 +8,10 @@ extern "C" {
 class CZlibWrapper
 {
 public:
-	~CZlibWrapper()
-	{
-		gzopen(".", ",");
-	}
+	CZlibWrapper();
+	~CZlibWrapper();
+	
+	int Uncompress(char* filePath, char* buffer);
+	
 };
 

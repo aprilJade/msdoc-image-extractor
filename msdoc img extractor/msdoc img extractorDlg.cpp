@@ -54,6 +54,8 @@ CmsdocimgextractorDlg::CmsdocimgextractorDlg(CWnd* pParent /*=nullptr*/)
 void CmsdocimgextractorDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_SEL_PATH_EDIT, m_pathEdit);
+	DDX_Control(pDX, IDC_DIR_TREE, m_fileTree);
 }
 
 BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
@@ -85,6 +87,8 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
+	
+	InitializeFileTree();
 
 	CZlibWrapper zlib;
 
@@ -132,3 +136,37 @@ HCURSOR CmsdocimgextractorDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CmsdocimgextractorDlg::InitializeFileTree()
+{
+	CString defualtPath = L"C:";
+	
+	// Todo: add item icon
+	HTREEITEM hItem = m_fileTree.InsertItem(defualtPath);
+
+	CFileFind finder;
+	CFileFind subFinder;
+	BOOL bSubWorking;
+	BOOL bWorking = finder.FindFile(defualtPath + L"\\*");
+
+	while (bWorking) 
+	{
+		bWorking = finder.FindNextFileW();
+		
+		if (finder.IsDirectory() && !finder.IsHidden())
+		{
+			HTREEITEM subItem = m_fileTree.InsertItem(finder.GetFileName(), hItem);
+			bSubWorking = subFinder.FindFile(finder.GetFilePath() + L"\\*");
+			while (bSubWorking)
+			{
+				bSubWorking = subFinder.FindNextFileW();
+				if (!subFinder.IsHidden() && !subFinder.IsDots())
+				{
+					m_fileTree.InsertItem(subFinder.GetFileName(), subItem);
+				}
+			}
+		}
+	}
+
+	m_fileTree.EnsureVisible(hItem);
+	m_fileTree.Expand(m_fileTree.GetFirstVisibleItem(), TVE_EXPAND);
+}

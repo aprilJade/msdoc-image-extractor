@@ -15,6 +15,9 @@
 #define IDC_IMG_PREVIEW                 1008
 #define IDC_BUTTON2                     1009
 #define IDC_SETTRING_BTN                1009
+#define IDC_SEL_PATH_EDIT               1010
+#define IDC_SEL_ALL_BTN                 1011
+#define IDC_DIR_TREE                    1012
 
 // Next default values for new objects
 // 
@@ -22,7 +25,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1010
+#define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
