@@ -4,6 +4,7 @@
 
 #pragma once
 
+#define SUPPORT_EXT_CNT 3
 
 // CmsdocimgextractorDlg dialog
 class CmsdocimgextractorDlg : public CDialogEx
@@ -38,4 +39,9 @@ public:
 	void InitializeFileTree();
 	CString GetSelectedItemPath(HTREEITEM hItem);
 	afx_msg void OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResult);
+
+private:
+	bool IsSupportedFile(CString path);
+	TCHAR* m_supportExt[SUPPORT_EXT_CNT] = { L"pptx", L"xlsx", L"docx" };
 };

@@ -63,6 +63,7 @@ BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnItemexpandingDirTree)
+	ON_NOTIFY(TVN_SELCHANGED, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnSelchangedDirTree)
 END_MESSAGE_MAP()
 
 BOOL CmsdocimgextractorDlg::OnInitDialog()
@@ -137,6 +138,22 @@ HCURSOR CmsdocimgextractorDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+bool CmsdocimgextractorDlg::IsSupportedFile(CString path)
+{
+	int i = path.ReverseFind('.');
+	if (i > 0)
+	{
+		TCHAR* buf = path.GetBuffer();
+
+		for (int idx = 0; idx < SUPPORT_EXT_CNT; idx++)
+		{
+			if (StrCmpW(buf + i + 1, m_supportExt[idx]) == 0)
+				return true;
+		}
+	}
+	return false;
+}
+
 void CmsdocimgextractorDlg::InitializeFileTree()
 {
 	CString defualtPath = L"C:";
@@ -153,6 +170,11 @@ void CmsdocimgextractorDlg::InitializeFileTree()
 		
 		if (!finder.IsDots() && !finder.IsHidden())
 		{
+			if (finder.IsDirectory() == false)
+			{
+				if (IsSupportedFile(finder.GetFilePath()) == false)
+					continue;
+			}
 			m_fileTree.InsertItem(finder.GetFileName(), hItem);
 		}
 	}
@@ -200,6 +222,11 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 			bFlag = finder.FindNextFileW();
 			if (!finder.IsDots() && !finder.IsHidden())
 			{
+				if (finder.IsDirectory() == false)
+				{
+					if (IsSupportedFile(finder.GetFilePath()) == false)
+						continue;
+				}
 				m_fileTree.InsertItem(finder.GetFileName(), hItem);
 			}
 		}
@@ -210,3 +237,12 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
+
+
+void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
+	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
+	m_pathEdit.SetWindowTextW(GetSelectedItemPath(hItem));
+	*pResult = 0;
+}
