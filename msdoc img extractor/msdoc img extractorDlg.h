@@ -36,4 +36,6 @@ public:
 
 	CTreeCtrl m_fileTree;
 	void InitializeFileTree();
+	CString GetSelectedItemPath(HTREEITEM hItem);
+	afx_msg void OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pResult);
 };

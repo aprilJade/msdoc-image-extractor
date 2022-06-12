@@ -62,6 +62,7 @@ BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnItemexpandingDirTree)
 END_MESSAGE_MAP()
 
 BOOL CmsdocimgextractorDlg::OnInitDialog()
@@ -144,29 +145,68 @@ void CmsdocimgextractorDlg::InitializeFileTree()
 	HTREEITEM hItem = m_fileTree.InsertItem(defualtPath);
 
 	CFileFind finder;
-	CFileFind subFinder;
-	BOOL bSubWorking;
 	BOOL bWorking = finder.FindFile(defualtPath + L"\\*");
 
 	while (bWorking) 
 	{
 		bWorking = finder.FindNextFileW();
 		
-		if (finder.IsDirectory() && !finder.IsHidden())
+		if (!finder.IsDots() && !finder.IsHidden())
 		{
-			HTREEITEM subItem = m_fileTree.InsertItem(finder.GetFileName(), hItem);
-			bSubWorking = subFinder.FindFile(finder.GetFilePath() + L"\\*");
-			while (bSubWorking)
-			{
-				bSubWorking = subFinder.FindNextFileW();
-				if (!subFinder.IsHidden() && !subFinder.IsDots())
-				{
-					m_fileTree.InsertItem(subFinder.GetFileName(), subItem);
-				}
-			}
+			m_fileTree.InsertItem(finder.GetFileName(), hItem);
 		}
 	}
 
 	m_fileTree.EnsureVisible(hItem);
-	m_fileTree.Expand(m_fileTree.GetFirstVisibleItem(), TVE_EXPAND);
+	m_fileTree.Expand(hItem, TVE_EXPAND);
 }
+
+CString CmsdocimgextractorDlg::GetSelectedItemPath(HTREEITEM hItem)
+{
+	CString ret = m_fileTree.GetItemText(hItem);
+
+	HTREEITEM hParent = m_fileTree.GetParentItem(hItem);
+	while (hParent)
+	{
+		ret = m_fileTree.GetItemText(hParent) + L"\\" + ret;
+		hParent = m_fileTree.GetParentItem(hParent);
+	}
+
+	return ret;
+}
+
+void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
+
+	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
+	CFileFind finder;
+	BOOL bFlag;
+
+	hItem = m_fileTree.GetChildItem(hItem);
+	
+	while (hItem)
+	{
+		if (m_fileTree.ItemHasChildren(hItem))
+		{
+			break;
+		}
+
+		CString selectedPath = GetSelectedItemPath(hItem);
+		bFlag = finder.FindFile(selectedPath + L"\\*");
+
+		while (bFlag)
+		{
+			bFlag = finder.FindNextFileW();
+			if (!finder.IsDots() && !finder.IsHidden())
+			{
+				m_fileTree.InsertItem(finder.GetFileName(), hItem);
+			}
+		}
+
+		hItem = m_fileTree.GetNextSiblingItem(hItem);
+	}
+
+	*pResult = 0;
+}
+
