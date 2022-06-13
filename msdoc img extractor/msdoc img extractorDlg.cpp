@@ -56,6 +56,7 @@ void CmsdocimgextractorDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_SEL_PATH_EDIT, m_pathEdit);
 	DDX_Control(pDX, IDC_DIR_TREE, m_fileTree);
+	DDX_Control(pDX, IDC_IMG_TREE, m_ImageTree);
 }
 
 BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
@@ -156,7 +157,7 @@ bool CmsdocimgextractorDlg::IsSupportedFile(CString path)
 
 void CmsdocimgextractorDlg::InitializeFileTree()
 {
-	CString defualtPath = L"C:";
+	CString defualtPath = L"C:\\Users\\apriljade\\Desktop";
 	
 	// Todo: add item icon
 	HTREEITEM hItem = m_fileTree.InsertItem(defualtPath);
@@ -237,12 +238,24 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
-
+void CmsdocimgextractorDlg::ListUpImages(CAtlList<SImageInfo>& imageInfo)
+{
+	// Not implemented yet
+}
 
 void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
 	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
-	m_pathEdit.SetWindowTextW(GetSelectedItemPath(hItem));
+	CString filePath = GetSelectedItemPath(hItem);
+	
+	m_pathEdit.SetWindowTextW(filePath);
+
+	CDocCtrl* docCtrl = new CDocCtrl(filePath);
+	CAtlList<SImageInfo> imageInfo;
+	docCtrl->Parse(imageInfo);
+	ListUpImages(imageInfo);
+
+	delete docCtrl;
 	*pResult = 0;
 }

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "DocCtrl.h"
 #define SUPPORT_EXT_CNT 3
 
 // CmsdocimgextractorDlg dialog
@@ -42,6 +43,10 @@ public:
 	afx_msg void OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResult);
 
 private:
-	bool IsSupportedFile(CString path);
 	TCHAR* m_supportExt[SUPPORT_EXT_CNT] = { L"pptx", L"xlsx", L"docx" };
+	bool IsSupportedFile(CString path);
+	void ListUpImages(CAtlList<SImageInfo>& imageInfo);
+
+public:
+	CTreeCtrl m_ImageTree;
 };
