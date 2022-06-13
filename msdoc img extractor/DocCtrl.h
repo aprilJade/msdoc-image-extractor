@@ -35,6 +35,10 @@ public:
 	void Parse(CAtlList<SImageInfo>& imageInfo);
 
 private:
+	BOOL IsImageSegment(char* buf);
+	size_t GetSegmentSize(char* data);
+
+private:
 	CString m_filePath;
 	CAtlList<SImageInfo>* m_images;
 };
