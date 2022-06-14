@@ -1,6 +1,6 @@
 #pragma once
 #include <atlcoll.h>
-#define PK_ZIP_HEADER_SIZE 30
+
 #define PK_ZIP_SIGNATURE 0x04034b50	// little endian
 
 typedef struct s_PKZipHeader
@@ -34,7 +34,7 @@ public:
 	CString GetFilePath() { return m_filePath; }
 	CString SetFilePath(CString filePath) { m_filePath = filePath; }
 
-	int Parse(CAtlList<SImageInfo>& imageInfo);
+	int Parse(CAtlList<SImageInfo*>& imageInfo);
 
 private:
 	BOOL IsImageSegment(char* buf);
@@ -42,6 +42,5 @@ private:
 
 private:
 	CString m_filePath;
-	CAtlList<SImageInfo>* m_images;
 };
 

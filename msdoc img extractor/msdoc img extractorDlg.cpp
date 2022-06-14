@@ -238,7 +238,7 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
-void CmsdocimgextractorDlg::ListUpImages(CAtlList<SImageInfo>& imageInfo)
+void CmsdocimgextractorDlg::ListUpImages(CAtlList<SImageInfo*>& imageInfo)
 {
 	// Not implemented yet
 }
@@ -256,9 +256,18 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	}
 
 	CDocCtrl* docCtrl = new CDocCtrl(filePath);
-	CAtlList<SImageInfo> imageInfo;
+	CAtlList<SImageInfo*> imageInfo;
 	docCtrl->Parse(imageInfo);
 	ListUpImages(imageInfo);
+
+	while (imageInfo.GetCount())
+	{
+		auto a = imageInfo.GetHead();
+		delete[] a->data;
+		delete[] a->name;
+		delete a;
+		imageInfo.RemoveHead();
+	}
 
 	delete docCtrl;
 	*pResult = 0;
