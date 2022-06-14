@@ -49,6 +49,9 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 		{
 			// Todo: implement error handling
 			// Notify file signature is not valid
+			UnmapViewOfFile(data);
+			CloseHandle(hMMF);
+			CloseHandle(hFile);
 			return -2;
 		}
 		if (strncmp(pData + sizeof(SPKZipHeader), mediaPath, strlen(mediaPath)) == 0)
@@ -69,20 +72,20 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 			continue;
 		}
 
-		BYTE* imgBuf = new BYTE[pkHdr->uncompressedSize];
-		ZeroMemory(imgBuf, pkHdr->uncompressedSize);
-
-		SImageInfo* info;
-		info = new SImageInfo;
+		SImageInfo* info = new SImageInfo;
 		ZeroMemory(info, sizeof(SImageInfo));
 
-		info->data = imgBuf;
-		info->dataSize = pkHdr->uncompressedSize;
+
 		info->name = new char[pkHdr->fileNameLen + 1];
 		ZeroMemory(info->name, pkHdr->fileNameLen + 1);
 		memcpy(info->name, pData + sizeof(SPKZipHeader), pkHdr->fileNameLen);
+		
+		info->dataSize = pkHdr->uncompressedSize;
+		info->data = new BYTE[pkHdr->uncompressedSize];
+		ZeroMemory(info->data, pkHdr->uncompressedSize);
 		pData += sizeof(SPKZipHeader) + pkHdr->fileNameLen + pkHdr->extraFieldLen;
 		memcpy(info->data, pData, pkHdr->compressedSize);
+		
 		imageInfo.InsertAfter(imageInfo.GetTailPosition(), info);
 		pData += pkHdr->compressedSize;
 	} while (strncmp(pData + sizeof(SPKZipHeader), mediaPath, strlen(mediaPath)) == 0);
@@ -93,18 +96,4 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 	CloseHandle(hFile);
 
 	return imageInfo.GetCount();
-}
-
-BOOL CDocCtrl::IsImageSegment(char* buf)
-{
-	SPKZipHeader* hdr = (SPKZipHeader*)buf;
-	return TRUE;
-}
-
-size_t CDocCtrl::GetSegmentSize(char* data)
-{
-	size_t ret = 0;
-	SPKZipHeader* hdr = (SPKZipHeader*)data;
-	ret += hdr->compressedSize + hdr->fileNameLen + hdr->extraFieldLen + sizeof(hdr);
-	return  ret;
 }

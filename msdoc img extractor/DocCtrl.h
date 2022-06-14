@@ -37,7 +37,6 @@ public:
 	int Parse(CAtlList<SImageInfo*>& imageInfo);
 
 private:
-	BOOL IsImageSegment(char* buf);
 	size_t GetSegmentSize(char* data);
 
 private:
