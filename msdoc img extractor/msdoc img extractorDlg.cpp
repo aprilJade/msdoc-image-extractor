@@ -155,13 +155,13 @@ bool CmsdocimgextractorDlg::IsSupportedFile(CString path)
 
 void CmsdocimgextractorDlg::InitializeFileTree()
 {
-	CString defualtPath = L"C:\\Users\\apriljade\\Desktop";
+	CString defualtPath = L"C:/Users/apriljade/Desktop";
 	
 	// Todo: add item icon
 	HTREEITEM hItem = m_fileTree.InsertItem(defualtPath);
 
 	CFileFind finder;
-	BOOL bWorking = finder.FindFile(defualtPath + L"\\*");
+	BOOL bWorking = finder.FindFile(defualtPath + L"/*");
 
 	while (bWorking) 
 	{
@@ -189,7 +189,7 @@ CString CmsdocimgextractorDlg::GetSelectedItemPath(HTREEITEM hItem)
 	HTREEITEM hParent = m_fileTree.GetParentItem(hItem);
 	while (hParent)
 	{
-		ret = m_fileTree.GetItemText(hParent) + L"\\" + ret;
+		ret = m_fileTree.GetItemText(hParent) + L"/" + ret;
 		hParent = m_fileTree.GetParentItem(hParent);
 	}
 
@@ -212,7 +212,7 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 			break;
 
 		CString selectedPath = GetSelectedItemPath(hItem);
-		bFlag = finder.FindFile(selectedPath + L"\\*");
+		bFlag = finder.FindFile(selectedPath + L"/*");
 
 		while (bFlag)
 		{

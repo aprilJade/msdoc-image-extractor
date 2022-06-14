@@ -20,6 +20,7 @@ typedef struct s_PKZipHeader
 
 typedef struct s_ImageInfo
 {
+	// Todo: Change sturcture to class, for destructuring
 	UINT dataSize;
 	BYTE* data;
 	char* name;
@@ -35,9 +36,6 @@ public:
 	CString SetFilePath(CString filePath) { m_filePath = filePath; }
 
 	int Parse(CAtlList<SImageInfo*>& imageInfo);
-
-private:
-	size_t GetSegmentSize(char* data);
 
 private:
 	CString m_filePath;
