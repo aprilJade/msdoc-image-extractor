@@ -147,10 +147,8 @@ bool CmsdocimgextractorDlg::IsSupportedFile(CString path)
 		TCHAR* buf = path.GetBuffer();
 
 		for (int idx = 0; idx < SUPPORT_EXT_CNT; idx++)
-		{
 			if (StrCmpW(buf + i + 1, m_supportExt[idx]) == 0)
 				return true;
-		}
 	}
 	return false;
 }
@@ -211,9 +209,7 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	while (hItem)
 	{
 		if (m_fileTree.ItemHasChildren(hItem))
-		{
 			break;
-		}
 
 		CString selectedPath = GetSelectedItemPath(hItem);
 		bFlag = finder.FindFile(selectedPath + L"\\*");
@@ -223,11 +219,9 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 			bFlag = finder.FindNextFileW();
 			if (!finder.IsDots() && !finder.IsHidden())
 			{
-				if (finder.IsDirectory() == false)
-				{
-					if (IsSupportedFile(finder.GetFilePath()) == false)
-						continue;
-				}
+				if (!finder.IsDirectory() && !IsSupportedFile(finder.GetFilePath()))
+					continue;
+				
 				m_fileTree.InsertItem(finder.GetFileName(), hItem);
 			}
 		}
@@ -238,9 +232,27 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
-void CmsdocimgextractorDlg::ListUpImages(CAtlList<SImageInfo*>& imageInfo)
+void CmsdocimgextractorDlg::ListUpImages(CAtlList<SImageInfo*>& imageInfo, CString filePath)
 {
 	// Not implemented yet
+	HTREEITEM hItem = m_ImageTree.InsertItem(filePath);
+	
+	SImageInfo* info = nullptr;
+	for (int i = 0; i < imageInfo.GetCount(); i++)
+	{
+		info = imageInfo.GetAt(imageInfo.FindIndex(i));
+		int nLen = strlen(info->name) + 1;
+		size_t convertedCnt = 0;
+		//wchar_t* pwstr = (LPWSTR)malloc(sizeof(wchar_t) * nLen);
+		WCHAR* pwstr = new WCHAR[nLen];
+		mbstowcs_s(&convertedCnt, pwstr, nLen, info->name, nLen);
+
+		m_ImageTree.InsertItem(pwstr, hItem);
+		delete[] pwstr;
+	}
+
+	m_ImageTree.EnsureVisible(hItem);
+	m_ImageTree.Expand(hItem, TVE_EXPAND);
 }
 
 void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResult)
@@ -251,14 +263,13 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	
 	m_pathEdit.SetWindowTextW(filePath);
 	if (IsSupportedFile(filePath) == FALSE)
-	{
 		return;
-	}
 
+	// Todo: to make more efficiency
 	CDocCtrl* docCtrl = new CDocCtrl(filePath);
 	CAtlList<SImageInfo*> imageInfo;
 	docCtrl->Parse(imageInfo);
-	ListUpImages(imageInfo);
+	ListUpImages(imageInfo, filePath);
 
 	while (imageInfo.GetCount())
 	{

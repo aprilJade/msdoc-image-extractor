@@ -4,10 +4,12 @@
 CDocCtrl::CDocCtrl(CString filePath)
 	: m_filePath(filePath)
 {
+	// empty now
 }
 
 CDocCtrl::~CDocCtrl()
 {
+	// empty now
 }
 
 int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
@@ -54,10 +56,10 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 			CloseHandle(hFile);
 			return -2;
 		}
+
 		if (strncmp(pData + sizeof(SPKZipHeader), mediaPath, strlen(mediaPath)) == 0)
-		{
 			break;
-		}
+		
 		pData += sizeof(SPKZipHeader) + pkHdr->compressedSize + pkHdr->fileNameLen + pkHdr->extraFieldLen;
 	}
 
@@ -75,7 +77,6 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 		SImageInfo* info = new SImageInfo;
 		ZeroMemory(info, sizeof(SImageInfo));
 
-
 		info->name = new char[pkHdr->fileNameLen + 1];
 		ZeroMemory(info->name, pkHdr->fileNameLen + 1);
 		memcpy(info->name, pData + sizeof(SPKZipHeader), pkHdr->fileNameLen);
@@ -90,7 +91,6 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 		pData += pkHdr->compressedSize;
 	} while (strncmp(pData + sizeof(SPKZipHeader), mediaPath, strlen(mediaPath)) == 0);
 	
-
 	UnmapViewOfFile(data);
 	CloseHandle(hMMF);
 	CloseHandle(hFile);
