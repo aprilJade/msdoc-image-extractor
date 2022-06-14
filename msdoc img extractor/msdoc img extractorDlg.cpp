@@ -250,6 +250,10 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	CString filePath = GetSelectedItemPath(hItem);
 	
 	m_pathEdit.SetWindowTextW(filePath);
+	if (IsSupportedFile(filePath) == FALSE)
+	{
+		return;
+	}
 
 	CDocCtrl* docCtrl = new CDocCtrl(filePath);
 	CAtlList<SImageInfo> imageInfo;
