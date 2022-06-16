@@ -12,7 +12,7 @@ CDocCtrl::~CDocCtrl()
 	// empty now
 }
 
-int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
+int CDocCtrl::Parse(CAtlList<CImageInfo*>& imageInfo)
 {
 	HANDLE hFile = CreateFile(m_filePath, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -59,7 +59,7 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 
 		if (strncmp(pData + sizeof(SPKZipHeader), mediaPath, strlen(mediaPath)) == 0)
 			break;
-		
+
 		pData += sizeof(SPKZipHeader) + pkHdr->compressedSize + pkHdr->fileNameLen + pkHdr->extraFieldLen;
 	}
 
@@ -74,23 +74,15 @@ int CDocCtrl::Parse(CAtlList<SImageInfo*>& imageInfo)
 			continue;
 		}
 
-		SImageInfo* info = new SImageInfo;
-		ZeroMemory(info, sizeof(SImageInfo));
+		CImageInfo* info = new CImageInfo(pData +sizeof(SPKZipHeader), pkHdr->fileNameLen);
 
-		info->name = new char[pkHdr->fileNameLen + 1];
-		ZeroMemory(info->name, pkHdr->fileNameLen + 1);
-		memcpy(info->name, pData + sizeof(SPKZipHeader), pkHdr->fileNameLen);
-		
-		info->dataSize = pkHdr->uncompressedSize;
-		info->data = new BYTE[pkHdr->uncompressedSize];
-		ZeroMemory(info->data, pkHdr->uncompressedSize);
 		pData += sizeof(SPKZipHeader) + pkHdr->fileNameLen + pkHdr->extraFieldLen;
-		memcpy(info->data, pData, pkHdr->compressedSize);
-		
+		info->CopyToBuffer((const BYTE*)pData, pkHdr->compressedSize);
+
 		imageInfo.InsertAfter(imageInfo.GetTailPosition(), info);
 		pData += pkHdr->compressedSize;
 	} while (strncmp(pData + sizeof(SPKZipHeader), mediaPath, strlen(mediaPath)) == 0);
-	
+
 	UnmapViewOfFile(data);
 	CloseHandle(hMMF);
 	CloseHandle(hFile);

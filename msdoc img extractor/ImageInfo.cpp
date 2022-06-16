@@ -46,3 +46,9 @@ void CImageInfo::ReleaseData()
 		m_dataSize = 0;
 	}
 }
+
+
+const char* CImageInfo::GetImageName() const
+{
+	return m_name;
+}

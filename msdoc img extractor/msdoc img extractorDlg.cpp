@@ -231,20 +231,20 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
-void CmsdocimgextractorDlg::ListUpImages(CAtlList<SImageInfo*>& imageInfo, CString filePath)
+void CmsdocimgextractorDlg::ListUpImages(CAtlList<CImageInfo*>& imageInfo, CString filePath)
 {
 	// Not implemented yet
 	HTREEITEM hItem = m_ImageTree.InsertItem(filePath);
 	
-	SImageInfo* info = nullptr;
+	CImageInfo* info = nullptr;
 	for (int i = 0; i < imageInfo.GetCount(); i++)
 	{
 		info = imageInfo.GetAt(imageInfo.FindIndex(i));
-		int nLen = strlen(info->name) + 1;
+		int nLen = strlen(info->GetImageName()) + 1;
 		size_t convertedCnt = 0;
 		//wchar_t* pwstr = (LPWSTR)malloc(sizeof(wchar_t) * nLen);
 		WCHAR* pwstr = new WCHAR[nLen];
-		mbstowcs_s(&convertedCnt, pwstr, nLen, info->name, nLen);
+		mbstowcs_s(&convertedCnt, pwstr, nLen, info->GetImageName(), nLen);
 
 		m_ImageTree.InsertItem(pwstr, hItem);
 		delete[] pwstr;
@@ -265,15 +265,13 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 
 	// Todo: to make more efficiency
 	CDocCtrl* docCtrl = new CDocCtrl(filePath);
-	CAtlList<SImageInfo*> imageInfo;
+	CAtlList<CImageInfo*> imageInfo;
 	docCtrl->Parse(imageInfo);
 	ListUpImages(imageInfo, filePath);
 
 	while (imageInfo.GetCount())
 	{
 		auto a = imageInfo.GetHead();
-		delete[] a->data;
-		delete[] a->name;
 		delete a;
 		imageInfo.RemoveHead();
 	}

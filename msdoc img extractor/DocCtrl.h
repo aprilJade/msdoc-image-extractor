@@ -1,5 +1,6 @@
 #pragma once
 #include <atlcoll.h>
+#include "ImageInfo.h"
 
 #define PK_ZIP_SIGNATURE 0x04034b50	// little endian
 
@@ -18,14 +19,6 @@ typedef struct s_PKZipHeader
 	USHORT extraFieldLen;
 } SPKZipHeader;
 
-typedef struct s_ImageInfo
-{
-	// Todo: Change sturcture to class, for destructuring
-	UINT dataSize;
-	BYTE* data;
-	char* name;
-} SImageInfo;
-
 class CDocCtrl
 {
 public:
@@ -35,7 +28,7 @@ public:
 	CString GetFilePath() { return m_filePath; }
 	CString SetFilePath(CString filePath) { m_filePath = filePath; }
 
-	int Parse(CAtlList<SImageInfo*>& imageInfo);
+	int Parse(CAtlList<CImageInfo*>& imageInfo);
 
 private:
 	CString m_filePath;

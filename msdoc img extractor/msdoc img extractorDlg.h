@@ -44,7 +44,7 @@ public:
 private:
 	TCHAR* m_supportExt[SUPPORT_EXT_CNT] = { L"pptx", L"xlsx", L"docx" };
 	bool IsSupportedFile(CString path);
-	void ListUpImages(CAtlList<SImageInfo*>& imageInfo, CString filePath);
+	void ListUpImages(CAtlList<CImageInfo*>& imageInfo, CString filePath);
 
 public:
 	CTreeCtrl m_ImageTree;
