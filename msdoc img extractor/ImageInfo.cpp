@@ -6,9 +6,11 @@ CImageInfo::CImageInfo(const char* imgName, const size_t length)
 	, m_dataSize(0)
 {
 	ASSERT(imgName && length > 0);
-	m_name = new char[length + 1];
-	ZeroMemory(m_name, length + 1);
-	memcpy(m_name, imgName, length);
+
+	size_t convertedCnt = 0;
+	m_name = new WCHAR[length + 1];
+	ZeroMemory(m_name, sizeof(WCHAR) * (length + 1));
+	mbstowcs_s(&convertedCnt, m_name, length + 1, imgName, length);
 }
 
 CImageInfo::~CImageInfo()
@@ -48,7 +50,7 @@ void CImageInfo::ReleaseData()
 }
 
 
-const char* CImageInfo::GetImageName() const
+const WCHAR* CImageInfo::GetImageName() const
 {
 	return m_name;
 }

@@ -242,19 +242,11 @@ void CmsdocimgextractorDlg::ListUpImages(CImageInfos* imageInfo, CString filePat
 	if (imageInfo->IsVisualized())
 		return;
 
-	char** keys = nullptr;
+	WCHAR** keys = nullptr;
 	imageInfo->GetKeys(&keys);
 
 	for (int i = 0; i < imageInfo->GetCount(); i++)
-	{
-		int nLen = strlen(keys[i]) + 1;
-		size_t convertedCnt = 0;
-		WCHAR* pwstr = new WCHAR[nLen];
-		mbstowcs_s(&convertedCnt, pwstr, nLen, keys[i], nLen);
-
-		m_ImageTree.InsertItem(pwstr, hItem);
-		delete[] pwstr;
-	}
+		m_ImageTree.InsertItem(keys[i], hItem);
 
 	m_ImageTree.EnsureVisible(hItem);
 	m_ImageTree.Expand(hItem, TVE_EXPAND);
@@ -311,6 +303,38 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 	CFolderPickerDialog dlg;
 	if (IDOK == dlg.DoModal())
 	{
+		CString dirPath = dlg.GetFolderPath();
+		
+		HTREEITEM hChild = NULL;
+		HTREEITEM hParent = m_ImageTree.GetFirstVisibleItem();
+		while (hParent)
+		{
+			hChild = m_ImageTree.GetChildItem(hParent);
+			while (hChild)
+			{
+				if (m_ImageTree.GetCheck(hChild))
+				{
+					CString filePath = m_ImageTree.GetItemText(hParent);
+					auto pair = m_map.Lookup((WCHAR*)(LPCTSTR)filePath);
+					if (pair == nullptr)
+					{
+						// Todo: handling fail to lookup
+						continue;
+					}
+					CString imagePath = m_ImageTree.GetItemText(hChild);
+					auto imageInfo = pair->m_value;
+					
+					//if (file.Open(filePath, CFile::modeCreate | CFile::modeWrite) == FALSE)
+					//{
+					//	// Todo: handling fail to create file
+					//	continue;
+					//}
+				}
+			}
+
+			hParent = m_ImageTree.GetNextVisibleItem(hParent);;
+		}
+
 		MessageBox(L"추출이 완료되었습니다!");
 	}
 }

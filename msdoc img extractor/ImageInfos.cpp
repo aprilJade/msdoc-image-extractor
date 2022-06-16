@@ -11,7 +11,7 @@ CImageInfos::CImageInfos()
 CImageInfos::~CImageInfos()
 {
 	POSITION pos = m_infos.GetStartPosition();
-	CAtlMap<const char*, CImageInfo*>::CPair* pair = nullptr;
+	CAtlMap<const WCHAR*, CImageInfo*>::CPair* pair = nullptr;
 	while (pos)
 	{
 		pair = m_infos.GetAt(pos);
@@ -21,19 +21,19 @@ CImageInfos::~CImageInfos()
 	m_infos.RemoveAll();
 }
 
-void CImageInfos::Insert(const char* key, CImageInfo* value)
+void CImageInfos::Insert(const WCHAR* key, CImageInfo* value)
 {
 	ASSERT(key && value);
 	m_infos.SetAt(key, value);
 }
 
-BOOL CImageInfos::Lookup(const char* key, CImageInfo** value) const
+BOOL CImageInfos::Lookup(const WCHAR* key, CImageInfo** value) const
 {
 	ASSERT(key);
 	return m_infos.Lookup(key, *value);
 }
 
-BOOL CImageInfos::Delete(const char* key)
+BOOL CImageInfos::Delete(const WCHAR* key)
 {
 	ASSERT(key);
 	return m_infos.RemoveKey(key);
@@ -51,28 +51,28 @@ size_t CImageInfos::GetCount() const
 	return m_infos.GetCount();
 }
 
-void CImageInfos::GetKeys(char*** keys) const
+void CImageInfos::GetKeys(WCHAR*** keys) const
 {
 	int i = 0;
 	size_t keyLen = 0;
 
-	*keys = new char* [m_infos.GetCount()];
+	*keys = new WCHAR* [m_infos.GetCount()];
 	
 	POSITION pos = m_infos.GetStartPosition();
 	auto pair = m_infos.GetAt(pos);
 	while (pos)
 	{
-		const char* key = m_infos.GetKeyAt(pos);
-		keyLen = strlen(key);
-		(*keys)[i] = new char[keyLen + 1];
-		ZeroMemory((*keys)[i], keyLen + 1);
-		memcpy((*keys)[i], key, keyLen);
+		const WCHAR* key = m_infos.GetKeyAt(pos);
+		keyLen = wcslen(key);
+		(*keys)[i] = new WCHAR[keyLen + 1];
+		ZeroMemory((*keys)[i], sizeof(WCHAR) * (keyLen + 1));
+		memcpy((*keys)[i], key, keyLen * 2);
 		m_infos.GetNext(pos);
 		i++;
 	}
 }
 
-CImageInfo* CImageInfos::GetValue(const char* key) const
+CImageInfo* CImageInfos::GetValue(const WCHAR* key) const
 {
 	ASSERT(key);
 	auto pair = m_infos.Lookup(key);

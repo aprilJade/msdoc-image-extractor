@@ -8,19 +8,19 @@ public:
 	CImageInfos();
 	~CImageInfos();
 
-	BOOL Lookup(const char* key, CImageInfo** value) const;
+	BOOL Lookup(const WCHAR* key, CImageInfo** value) const;
 	
-	void Insert(const char* key, CImageInfo* value);
+	void Insert(const WCHAR* key, CImageInfo* value);
 	
-	BOOL Delete(const char* key);
+	BOOL Delete(const WCHAR* key);
 	
 	BOOL DeleteAll();
 	
 	size_t GetCount() const;
 	
-	void GetKeys(char*** keys) const;
+	void GetKeys(WCHAR*** keys) const;
 	
-	CImageInfo* GetValue(const char* key) const;
+	CImageInfo* GetValue(const WCHAR* key) const;
 
 	BOOL IsVisualized() const;
 
@@ -28,6 +28,6 @@ public:
 
 private:
 	BOOL m_isVisualized;
-	CAtlMap<const char*, CImageInfo*> m_infos;
+	CAtlMap<const WCHAR*, CImageInfo*> m_infos;
 };
 
