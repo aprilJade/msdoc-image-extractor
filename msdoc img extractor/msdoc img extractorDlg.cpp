@@ -234,14 +234,17 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
-void CmsdocimgextractorDlg::ListUpImages(CImageInfos& imageInfo, CString filePath)
+void CmsdocimgextractorDlg::ListUpImages(CImageInfos* imageInfo, CString filePath)
 {
 	HTREEITEM hItem = m_ImageTree.InsertItem(filePath);
 	
-	char** keys = nullptr;
-	imageInfo.GetKeys(&keys);
+	if (imageInfo->IsVisualized())
+		return;
 
-	for (int i = 0; i < imageInfo.GetCount(); i++)
+	char** keys = nullptr;
+	imageInfo->GetKeys(&keys);
+
+	for (int i = 0; i < imageInfo->GetCount(); i++)
 	{
 		int nLen = strlen(keys[i]) + 1;
 		size_t convertedCnt = 0;
@@ -254,8 +257,9 @@ void CmsdocimgextractorDlg::ListUpImages(CImageInfos& imageInfo, CString filePat
 
 	m_ImageTree.EnsureVisible(hItem);
 	m_ImageTree.Expand(hItem, TVE_EXPAND);
-	
-	for (int i = 0; i < imageInfo.GetCount(); i++)
+	imageInfo->SetVisualized(TRUE);
+
+	for (int i = 0; i < imageInfo->GetCount(); i++)
 		delete[] keys[i];
 	delete[] keys;
 }
@@ -266,13 +270,18 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 	CString filePath = GetSelectedItemPath(hItem);
 	
-	if (IsSupportedFile(filePath) == FALSE)
+	if (!IsSupportedFile(filePath))
 		return;
 
-	CImageInfos imageInfo;
+	auto pair = m_map.Lookup((WCHAR*)(LPCTSTR)filePath);
+	if (pair != nullptr)
+		return;
+
+	CImageInfos* imageInfo = new CImageInfos();
 	m_docParser->Parse(filePath, imageInfo);
 
 	ListUpImages(imageInfo, filePath);
+	m_map.SetAt((WCHAR*)(LPCTSTR)filePath, imageInfo);
 
 	*pResult = 0;
 }
@@ -284,4 +293,14 @@ void CmsdocimgextractorDlg::OnDestroy()
 
 	// TODO: Add your message handler code here
 	delete m_docParser;
+
+	POSITION pos = m_map.GetStartPosition();
+	CAtlMap<WCHAR*, CImageInfos*>::CPair* pair = nullptr;
+	while (pos)
+	{
+		pair = m_map.GetAt(pos);
+		delete pair->m_value;
+		m_map.GetNext(pos);
+	}
+	m_map.RemoveAll();
 }

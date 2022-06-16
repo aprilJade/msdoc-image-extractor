@@ -48,7 +48,10 @@ private:
 	CDocParser* m_docParser;
 	TCHAR* m_supportExt[SUPPORT_EXT_CNT] = { L"pptx", L"xlsx", L"docx" };
 	bool IsSupportedFile(CString path);
-	void ListUpImages(CImageInfos& imageInfo, CString filePath);
+	void ListUpImages(CImageInfos* imageInfo, CString filePath);
+
+	CAtlMap<WCHAR*, CImageInfos*> m_map;
+
 public:
 	afx_msg void OnDestroy();
 };

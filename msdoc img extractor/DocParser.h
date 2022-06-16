@@ -31,8 +31,8 @@ public:
 	CString GetFilePath() { return m_filePath; }
 	CString SetFilePath(CString filePath) { m_filePath = filePath; }
 
-	int Parse(CString filePath, ImageInfos& imageInfo);
-	int Parse(CString filePath, CImageInfos& imageInfo);
+
+	int Parse(CString filePath, CImageInfos* imageInfo);
 
 private:
 	CString m_filePath;

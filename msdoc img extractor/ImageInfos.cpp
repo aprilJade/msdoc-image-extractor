@@ -15,7 +15,6 @@ CImageInfos::~CImageInfos()
 	while (pos)
 	{
 		pair = m_infos.GetAt(pos);
-		auto a = pair->m_key;
 		delete pair->m_value;
 		m_infos.GetNext(pos);
 	}
@@ -68,7 +67,7 @@ void CImageInfos::GetKeys(char*** keys) const
 		(*keys)[i] = new char[keyLen + 1];
 		ZeroMemory((*keys)[i], keyLen + 1);
 		memcpy((*keys)[i], key, keyLen);
-		pair = m_infos.GetNext(pos);
+		m_infos.GetNext(pos);
 		i++;
 	}
 }
