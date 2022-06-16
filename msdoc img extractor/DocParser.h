@@ -19,11 +19,11 @@ typedef struct s_PKZipHeader
 	USHORT extraFieldLen;
 } SPKZipHeader;
 
-class CDocCtrl
+class CDocParser
 {
 public:
-	CDocCtrl(CString filePath);
-	~CDocCtrl();
+	CDocParser(CString filePath);
+	~CDocParser();
 
 	CString GetFilePath() { return m_filePath; }
 	CString SetFilePath(CString filePath) { m_filePath = filePath; }

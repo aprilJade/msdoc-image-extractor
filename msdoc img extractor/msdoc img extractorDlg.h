@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "DocCtrl.h"
+#include "DocParser.h"
 #define SUPPORT_EXT_CNT 3
 
 // CmsdocimgextractorDlg dialog

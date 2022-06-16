@@ -1,18 +1,18 @@
 #include "pch.h"
-#include "DocCtrl.h"
+#include "DocParser.h"
 
-CDocCtrl::CDocCtrl(CString filePath)
+CDocParser::CDocParser(CString filePath)
 	: m_filePath(filePath)
 {
 	// empty now
 }
 
-CDocCtrl::~CDocCtrl()
+CDocParser::~CDocParser()
 {
 	// empty now
 }
 
-int CDocCtrl::Parse(CAtlList<CImageInfo*>& imageInfo)
+int CDocParser::Parse(CAtlList<CImageInfo*>& imageInfo)
 {
 	HANDLE hFile = CreateFile(m_filePath, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)

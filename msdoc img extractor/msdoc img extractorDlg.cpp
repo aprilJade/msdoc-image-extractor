@@ -264,7 +264,7 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 		return;
 
 	// Todo: to make more efficiency
-	CDocCtrl* docCtrl = new CDocCtrl(filePath);
+	CDocParser* docCtrl = new CDocParser(filePath);
 	CAtlList<CImageInfo*> imageInfo;
 	docCtrl->Parse(imageInfo);
 	ListUpImages(imageInfo, filePath);

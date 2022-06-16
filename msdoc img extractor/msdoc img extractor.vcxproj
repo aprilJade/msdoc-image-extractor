@@ -188,7 +188,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DocCtrl.h" />
+    <ClInclude Include="DocParser.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ImageInfo.h" />
     <ClInclude Include="msdoc img extractor.h" />
@@ -199,7 +199,7 @@
     <ClInclude Include="ZlibWrapper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DocCtrl.cpp" />
+    <ClCompile Include="DocParser.cpp" />
     <ClCompile Include="ImageInfo.cpp" />
     <ClCompile Include="msdoc img extractor.cpp" />
     <ClCompile Include="msdoc img extractorDlg.cpp" />
