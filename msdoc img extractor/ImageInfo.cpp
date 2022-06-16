@@ -54,3 +54,8 @@ CString CImageInfo::GetImageName() const
 {
 	return m_name;
 }
+
+size_t CImageInfo::GetDataSize() const
+{
+	return m_dataSize;
+}

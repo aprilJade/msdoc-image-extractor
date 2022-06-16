@@ -10,7 +10,7 @@ public:
 	const BYTE* GetDataRef() const;
 	void ReleaseData();
 	CString GetImageName() const;
-
+	size_t GetDataSize() const;
 private:
 	size_t m_dataSize;
 	BYTE* m_data;

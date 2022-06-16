@@ -332,7 +332,10 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 						// Todo: handling fail to create file
 						continue;
 					}
+					file.Write(info->GetDataRef(), info->GetDataSize());
+					file.Close();
 				}
+				hChild = m_ImageTree.GetNextVisibleItem(hChild);
 			}
 
 			hParent = m_ImageTree.GetNextVisibleItem(hParent);;
