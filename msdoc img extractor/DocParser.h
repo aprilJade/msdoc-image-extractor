@@ -19,8 +19,6 @@ typedef struct s_PKZipHeader
 	USHORT extraFieldLen;
 } SPKZipHeader;
 
-typedef CAtlList<CImageInfo*> ImageInfos;
-
 class CDocParser
 {
 public:

@@ -54,4 +54,5 @@ private:
 
 public:
 	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedExtractBtn();
 };

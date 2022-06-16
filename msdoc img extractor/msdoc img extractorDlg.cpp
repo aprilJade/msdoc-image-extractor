@@ -1,4 +1,4 @@
-
+﻿
 // msdoc img extractorDlg.cpp : implementation file
 //
 
@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
 	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnItemexpandingDirTree)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnSelchangedDirTree)
 	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDC_EXTRACT_BTN, &CmsdocimgextractorDlg::OnBnClickedExtractBtn)
 END_MESSAGE_MAP()
 
 BOOL CmsdocimgextractorDlg::OnInitDialog()
@@ -291,7 +292,6 @@ void CmsdocimgextractorDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 
-	// TODO: Add your message handler code here
 	delete m_docParser;
 
 	POSITION pos = m_map.GetStartPosition();
@@ -303,4 +303,14 @@ void CmsdocimgextractorDlg::OnDestroy()
 		m_map.GetNext(pos);
 	}
 	m_map.RemoveAll();
+}
+
+void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
+{
+	// TODO: Add your control notification handler code here
+	CFolderPickerDialog dlg;
+	if (IDOK == dlg.DoModal())
+	{
+		MessageBox(L"추출이 완료되었습니다!");
+	}
 }
