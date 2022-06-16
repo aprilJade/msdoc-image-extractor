@@ -10,8 +10,15 @@ CImageInfos::CImageInfos()
 
 CImageInfos::~CImageInfos()
 {
-	// not implemented yet
-	// implement delete every CImageInfo data...
+	POSITION pos = m_infos.GetStartPosition();
+	CAtlMap<const char*, CImageInfo*>::CPair* pair = nullptr;
+	while (pos)
+	{
+		pair = m_infos.GetAt(pos);
+		auto a = pair->m_key;
+		delete pair->m_value;
+		m_infos.GetNext(pos);
+	}
 	m_infos.RemoveAll();
 }
 
@@ -50,8 +57,7 @@ void CImageInfos::GetKeys(char*** keys) const
 	int i = 0;
 	size_t keyLen = 0;
 
-	*keys = new char* [m_infos.GetCount() + 1];
-	*keys[m_infos.GetCount()] = nullptr;
+	*keys = new char* [m_infos.GetCount()];
 	
 	POSITION pos = m_infos.GetStartPosition();
 	auto pair = m_infos.GetAt(pos);
@@ -59,9 +65,9 @@ void CImageInfos::GetKeys(char*** keys) const
 	{
 		const char* key = m_infos.GetKeyAt(pos);
 		keyLen = strlen(key);
-		*keys[i] = new char[keyLen + 1];
-		ZeroMemory(&(*keys[i]), keyLen + 1);
-		memcpy(&(*keys[i]), key, keyLen);
+		(*keys)[i] = new char[keyLen + 1];
+		ZeroMemory((*keys)[i], keyLen + 1);
+		memcpy((*keys)[i], key, keyLen);
 		pair = m_infos.GetNext(pos);
 		i++;
 	}

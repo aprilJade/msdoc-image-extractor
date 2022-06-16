@@ -234,18 +234,19 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
-void CmsdocimgextractorDlg::ListUpImages(CAtlList<CImageInfo*>& imageInfo, CString filePath)
+void CmsdocimgextractorDlg::ListUpImages(CImageInfos& imageInfo, CString filePath)
 {
 	HTREEITEM hItem = m_ImageTree.InsertItem(filePath);
 	
-	CImageInfo* info = nullptr;
+	char** keys = nullptr;
+	imageInfo.GetKeys(&keys);
+
 	for (int i = 0; i < imageInfo.GetCount(); i++)
 	{
-		info = imageInfo.GetAt(imageInfo.FindIndex(i));
-		int nLen = strlen(info->GetImageName()) + 1;
+		int nLen = strlen(keys[i]) + 1;
 		size_t convertedCnt = 0;
 		WCHAR* pwstr = new WCHAR[nLen];
-		mbstowcs_s(&convertedCnt, pwstr, nLen, info->GetImageName(), nLen);
+		mbstowcs_s(&convertedCnt, pwstr, nLen, keys[i], nLen);
 
 		m_ImageTree.InsertItem(pwstr, hItem);
 		delete[] pwstr;
@@ -253,6 +254,10 @@ void CmsdocimgextractorDlg::ListUpImages(CAtlList<CImageInfo*>& imageInfo, CStri
 
 	m_ImageTree.EnsureVisible(hItem);
 	m_ImageTree.Expand(hItem, TVE_EXPAND);
+	
+	for (int i = 0; i < imageInfo.GetCount(); i++)
+		delete[] keys[i];
+	delete[] keys;
 }
 
 void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResult)
@@ -264,17 +269,10 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	if (IsSupportedFile(filePath) == FALSE)
 		return;
 
-	ImageInfos imageInfo;
+	CImageInfos imageInfo;
 	m_docParser->Parse(filePath, imageInfo);
 
 	ListUpImages(imageInfo, filePath);
-
-	while (imageInfo.GetCount())
-	{
-		auto a = imageInfo.GetHead();
-		delete a;
-		imageInfo.RemoveHead();
-	}
 
 	*pResult = 0;
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include <atlcoll.h>
-#include "ImageInfo.h"
+#include "ImageInfos.h"
 
 #define PK_ZIP_SIGNATURE 0x04034b50	// little endian
 
@@ -32,6 +32,7 @@ public:
 	CString SetFilePath(CString filePath) { m_filePath = filePath; }
 
 	int Parse(CString filePath, ImageInfos& imageInfo);
+	int Parse(CString filePath, CImageInfos& imageInfo);
 
 private:
 	CString m_filePath;
