@@ -50,7 +50,7 @@ private:
 	bool IsSupportedFile(CString path);
 	void ListUpImages(CImageInfos* imageInfo, CString filePath);
 
-	CAtlMap<WCHAR*, CImageInfos*> m_map;
+	CAtlMap<CString, CImageInfos*, CStringElementTraits<CString>> m_map;
 
 public:
 	afx_msg void OnDestroy();

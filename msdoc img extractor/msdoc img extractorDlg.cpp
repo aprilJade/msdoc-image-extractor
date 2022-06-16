@@ -266,7 +266,7 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	if (!IsSupportedFile(filePath))
 		return;
 
-	auto pair = m_map.Lookup((WCHAR*)(LPCTSTR)filePath);
+	auto pair = m_map.Lookup(filePath);
 	if (pair != nullptr)
 		return;
 
@@ -274,7 +274,7 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	m_docParser->Parse(filePath, imageInfo);
 
 	ListUpImages(imageInfo, filePath);
-	m_map.SetAt((WCHAR*)(LPCTSTR)filePath, imageInfo);
+	m_map.SetAt(filePath, imageInfo);
 
 	*pResult = 0;
 }
@@ -287,7 +287,7 @@ void CmsdocimgextractorDlg::OnDestroy()
 	delete m_docParser;
 
 	POSITION pos = m_map.GetStartPosition();
-	CAtlMap<WCHAR*, CImageInfos*>::CPair* pair = nullptr;
+	CAtlMap<CString, CImageInfos*, CStringElementTraits<CString>>::CPair* pair = nullptr;
 	while (pos)
 	{
 		pair = m_map.GetAt(pos);
