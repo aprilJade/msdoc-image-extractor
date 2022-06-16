@@ -54,7 +54,6 @@ CmsdocimgextractorDlg::CmsdocimgextractorDlg(CWnd* pParent /*=nullptr*/)
 void CmsdocimgextractorDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_SEL_PATH_EDIT, m_pathEdit);
 	DDX_Control(pDX, IDC_DIR_TREE, m_fileTree);
 	DDX_Control(pDX, IDC_IMG_TREE, m_ImageTree);
 }
@@ -261,7 +260,6 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 	CString filePath = GetSelectedItemPath(hItem);
 	
-	m_pathEdit.SetWindowTextW(filePath);
 	if (IsSupportedFile(filePath) == FALSE)
 		return;
 

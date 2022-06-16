@@ -34,7 +34,6 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	CEdit m_pathEdit;
 
 	CTreeCtrl m_fileTree;
 	void InitializeFileTree();
