@@ -301,6 +301,7 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 	CFolderPickerDialog dlg;
 	if (IDOK == dlg.DoModal())
 	{
+		CFile fileCtrl;
 		CString dirPath = dlg.GetFolderPath();
 		
 		HTREEITEM hChild = NULL;
@@ -320,20 +321,16 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 						continue;
 					}
 					CString imagePath = m_ImageTree.GetItemText(hChild);
-					auto imageInfos = pair->m_value;
-					auto info = imageInfos->GetValue(imagePath);
-					int idx = imagePath.ReverseFind(L'/');
-					imagePath = imagePath.Right(imagePath.GetLength() - idx - 1);
+					CImageInfo* info = pair->m_value->GetValue(imagePath);
+					imagePath = imagePath.Right(imagePath.GetLength() - imagePath.ReverseFind(L'/') - 1);
 
-					auto data = info->GetDataRef();
-					CFile file;
-					if (file.Open(dirPath + L"\\" + imagePath, CFile::modeCreate | CFile::modeWrite) == FALSE)
+					if (fileCtrl.Open(dirPath + L"\\" + imagePath, CFile::modeCreate | CFile::modeWrite) == FALSE)
 					{
 						// Todo: handling fail to create file
 						continue;
 					}
-					file.Write(info->GetDataRef(), info->GetDataSize());
-					file.Close();
+					fileCtrl.Write(info->GetDataRef(), info->GetDataSize());
+					fileCtrl.Close();
 				}
 				hChild = m_ImageTree.GetNextVisibleItem(hChild);
 			}
