@@ -64,6 +64,7 @@ BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnItemexpandingDirTree)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnSelchangedDirTree)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 BOOL CmsdocimgextractorDlg::OnInitDialog()
@@ -89,6 +90,8 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
+	
+	m_docParser = new CDocParser();
 	
 	InitializeFileTree();
 
@@ -233,7 +236,6 @@ void CmsdocimgextractorDlg::OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pR
 
 void CmsdocimgextractorDlg::ListUpImages(CAtlList<CImageInfo*>& imageInfo, CString filePath)
 {
-	// Not implemented yet
 	HTREEITEM hItem = m_ImageTree.InsertItem(filePath);
 	
 	CImageInfo* info = nullptr;
@@ -242,7 +244,6 @@ void CmsdocimgextractorDlg::ListUpImages(CAtlList<CImageInfo*>& imageInfo, CStri
 		info = imageInfo.GetAt(imageInfo.FindIndex(i));
 		int nLen = strlen(info->GetImageName()) + 1;
 		size_t convertedCnt = 0;
-		//wchar_t* pwstr = (LPWSTR)malloc(sizeof(wchar_t) * nLen);
 		WCHAR* pwstr = new WCHAR[nLen];
 		mbstowcs_s(&convertedCnt, pwstr, nLen, info->GetImageName(), nLen);
 
@@ -263,10 +264,9 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 	if (IsSupportedFile(filePath) == FALSE)
 		return;
 
-	// Todo: to make more efficiency
-	CDocParser* docCtrl = new CDocParser(filePath);
-	CAtlList<CImageInfo*> imageInfo;
-	docCtrl->Parse(imageInfo);
+	ImageInfos imageInfo;
+	m_docParser->Parse(filePath, imageInfo);
+
 	ListUpImages(imageInfo, filePath);
 
 	while (imageInfo.GetCount())
@@ -276,6 +276,14 @@ void CmsdocimgextractorDlg::OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResu
 		imageInfo.RemoveHead();
 	}
 
-	delete docCtrl;
 	*pResult = 0;
+}
+
+
+void CmsdocimgextractorDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+
+	// TODO: Add your message handler code here
+	delete m_docParser;
 }

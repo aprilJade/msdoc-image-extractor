@@ -42,6 +42,9 @@
     <ClInclude Include="ImageInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageInfos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="msdoc img extractor.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImageInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageInfos.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

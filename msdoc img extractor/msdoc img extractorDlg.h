@@ -5,6 +5,7 @@
 #pragma once
 
 #include "DocParser.h"
+
 #define SUPPORT_EXT_CNT 3
 
 // CmsdocimgextractorDlg dialog
@@ -36,16 +37,18 @@ protected:
 public:
 
 	CTreeCtrl m_fileTree;
+	CTreeCtrl m_ImageTree;
+	
 	void InitializeFileTree();
 	CString GetSelectedItemPath(HTREEITEM hItem);
 	afx_msg void OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnTvnSelchangedDirTree(NMHDR* pNMHDR, LRESULT* pResult);
 
 private:
+	CDocParser* m_docParser;
 	TCHAR* m_supportExt[SUPPORT_EXT_CNT] = { L"pptx", L"xlsx", L"docx" };
 	bool IsSupportedFile(CString path);
 	void ListUpImages(CAtlList<CImageInfo*>& imageInfo, CString filePath);
-
 public:
-	CTreeCtrl m_ImageTree;
+	afx_msg void OnDestroy();
 };

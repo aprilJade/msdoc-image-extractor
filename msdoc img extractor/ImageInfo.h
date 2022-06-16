@@ -1,4 +1,5 @@
 #pragma once
+
 class CImageInfo
 {
 public:
@@ -9,6 +10,7 @@ public:
 	const BYTE* GetDataRef() const;
 	void ReleaseData();
 	const char* GetImageName() const;
+
 private:
 	size_t m_dataSize;
 	BYTE* m_data;

@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "DocParser.h"
 
+CDocParser::CDocParser()
+{
+	// empty now
+}
+
 CDocParser::CDocParser(CString filePath)
 	: m_filePath(filePath)
 {
@@ -12,9 +17,9 @@ CDocParser::~CDocParser()
 	// empty now
 }
 
-int CDocParser::Parse(CAtlList<CImageInfo*>& imageInfo)
+int CDocParser::Parse(CString filePath, ImageInfos& imageInfo)
 {
-	HANDLE hFile = CreateFile(m_filePath, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE hFile = CreateFile(filePath, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		// Todo: implement error handling

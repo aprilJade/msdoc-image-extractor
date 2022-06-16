@@ -191,6 +191,7 @@
     <ClInclude Include="DocParser.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ImageInfo.h" />
+    <ClInclude Include="ImageInfos.h" />
     <ClInclude Include="msdoc img extractor.h" />
     <ClInclude Include="msdoc img extractorDlg.h" />
     <ClInclude Include="pch.h" />
@@ -201,6 +202,7 @@
   <ItemGroup>
     <ClCompile Include="DocParser.cpp" />
     <ClCompile Include="ImageInfo.cpp" />
+    <ClCompile Include="ImageInfos.cpp" />
     <ClCompile Include="msdoc img extractor.cpp" />
     <ClCompile Include="msdoc img extractorDlg.cpp" />
     <ClCompile Include="pch.cpp">

@@ -19,16 +19,19 @@ typedef struct s_PKZipHeader
 	USHORT extraFieldLen;
 } SPKZipHeader;
 
+typedef CAtlList<CImageInfo*> ImageInfos;
+
 class CDocParser
 {
 public:
+	CDocParser();
 	CDocParser(CString filePath);
 	~CDocParser();
 
 	CString GetFilePath() { return m_filePath; }
 	CString SetFilePath(CString filePath) { m_filePath = filePath; }
 
-	int Parse(CAtlList<CImageInfo*>& imageInfo);
+	int Parse(CString filePath, ImageInfos& imageInfo);
 
 private:
 	CString m_filePath;
