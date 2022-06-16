@@ -7,18 +7,18 @@ CImageInfo::CImageInfo(const char* imgName, const size_t length)
 {
 	ASSERT(imgName && length > 0);
 
+	WCHAR* buf = new WCHAR[length + 1];
 	size_t convertedCnt = 0;
-	m_name = new WCHAR[length + 1];
-	ZeroMemory(m_name, sizeof(WCHAR) * (length + 1));
-	mbstowcs_s(&convertedCnt, m_name, length + 1, imgName, length);
+	ZeroMemory(buf, sizeof(WCHAR) * (length + 1));
+	mbstowcs_s(&convertedCnt, buf, length + 1, imgName, length);
+	m_name.Format(buf);
+	delete[] buf;
 }
 
 CImageInfo::~CImageInfo()
 {
 	if (m_data != nullptr)
 		delete[] m_data;
-	if (m_name != nullptr)
-		delete[] m_name;
 }
 
 void CImageInfo::CopyToBuffer(const BYTE* srcImg, const size_t srcSize)
@@ -36,7 +36,7 @@ void CImageInfo::CopyToBuffer(const BYTE* srcImg, const size_t srcSize)
 
 const BYTE* CImageInfo::GetDataRef() const
 {
-	return m_data;
+	return m_data ? m_data : nullptr;
 }
 
 void CImageInfo::ReleaseData()
@@ -50,7 +50,7 @@ void CImageInfo::ReleaseData()
 }
 
 
-const WCHAR* CImageInfo::GetImageName() const
+CString CImageInfo::GetImageName() const
 {
 	return m_name;
 }

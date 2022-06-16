@@ -8,19 +8,19 @@ public:
 	CImageInfos();
 	~CImageInfos();
 
-	BOOL Lookup(const WCHAR* key, CImageInfo** value) const;
+	BOOL Lookup(CString key, CImageInfo** value) const;
 	
-	void Insert(const WCHAR* key, CImageInfo* value);
+	void Insert(CString key, CImageInfo* value);
 	
-	BOOL Delete(const WCHAR* key);
+	BOOL Delete(CString key);
 	
 	BOOL DeleteAll();
 	
 	size_t GetCount() const;
 	
-	void GetKeys(WCHAR*** keys) const;
+	void GetKeys(CString** keys) const;
 	
-	CImageInfo* GetValue(const WCHAR* key) const;
+	CImageInfo* GetValue(CString key) const;
 
 	BOOL IsVisualized() const;
 
@@ -28,6 +28,6 @@ public:
 
 private:
 	BOOL m_isVisualized;
-	CAtlMap<const WCHAR*, CImageInfo*> m_infos;
+	CAtlMap<CString, CImageInfo*, CStringElementTraits<CString>> m_infos;
 };
 

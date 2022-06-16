@@ -242,7 +242,7 @@ void CmsdocimgextractorDlg::ListUpImages(CImageInfos* imageInfo, CString filePat
 	if (imageInfo->IsVisualized())
 		return;
 
-	WCHAR** keys = nullptr;
+	CString* keys = nullptr;
 	imageInfo->GetKeys(&keys);
 
 	for (int i = 0; i < imageInfo->GetCount(); i++)
@@ -252,8 +252,6 @@ void CmsdocimgextractorDlg::ListUpImages(CImageInfos* imageInfo, CString filePat
 	m_ImageTree.Expand(hItem, TVE_EXPAND);
 	imageInfo->SetVisualized(TRUE);
 
-	for (int i = 0; i < imageInfo->GetCount(); i++)
-		delete[] keys[i];
 	delete[] keys;
 }
 
@@ -315,20 +313,25 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 				if (m_ImageTree.GetCheck(hChild))
 				{
 					CString filePath = m_ImageTree.GetItemText(hParent);
-					auto pair = m_map.Lookup((WCHAR*)(LPCTSTR)filePath);
+					auto pair = m_map.Lookup(filePath);
 					if (pair == nullptr)
 					{
 						// Todo: handling fail to lookup
 						continue;
 					}
 					CString imagePath = m_ImageTree.GetItemText(hChild);
-					auto imageInfo = pair->m_value;
-					
-					//if (file.Open(filePath, CFile::modeCreate | CFile::modeWrite) == FALSE)
-					//{
-					//	// Todo: handling fail to create file
-					//	continue;
-					//}
+					auto imageInfos = pair->m_value;
+					auto info = imageInfos->GetValue(imagePath);
+					int idx = imagePath.ReverseFind(L'/');
+					imagePath = imagePath.Right(imagePath.GetLength() - idx - 1);
+
+					auto data = info->GetDataRef();
+					CFile file;
+					if (file.Open(dirPath + L"\\" + imagePath, CFile::modeCreate | CFile::modeWrite) == FALSE)
+					{
+						// Todo: handling fail to create file
+						continue;
+					}
 				}
 			}
 
