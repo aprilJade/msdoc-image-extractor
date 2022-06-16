@@ -82,6 +82,8 @@ int CDocParser::Parse(CString filePath, CImageInfos* imageInfo)
 		ZeroMemory(buf, pkHdr->fileNameLen + 1);
 		memcpy(buf, pData + sizeof(SPKZipHeader), pkHdr->fileNameLen);
 		CImageInfo* info = new CImageInfo(buf, pkHdr->fileNameLen);
+		delete[] buf;
+
 
 		pData += sizeof(SPKZipHeader) + pkHdr->fileNameLen + pkHdr->extraFieldLen;
 		info->CopyToBuffer((const BYTE*)pData, pkHdr->compressedSize);
