@@ -38,7 +38,8 @@ public:
 
 	CTreeCtrl m_fileTree;
 	CTreeCtrl m_ImageTree;
-	
+	CStatic m_ImagePreview;
+
 	void InitializeFileTree();
 	CString GetSelectedItemPath(HTREEITEM hItem);
 	afx_msg void OnTvnItemexpandingDirTree(NMHDR* pNMHDR, LRESULT* pResult);
@@ -52,7 +53,10 @@ private:
 
 	CAtlMap<CString, CImageInfos*, CStringElementTraits<CString>> m_map;
 
+	CImage m_imageCtrl;
+
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExtractBtn();
+	afx_msg void OnTvnSelchangedImgTree(NMHDR* pNMHDR, LRESULT* pResult);
 };

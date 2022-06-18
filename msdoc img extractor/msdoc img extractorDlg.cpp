@@ -56,6 +56,7 @@ void CmsdocimgextractorDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_DIR_TREE, m_fileTree);
 	DDX_Control(pDX, IDC_IMG_TREE, m_ImageTree);
+	DDX_Control(pDX, IDC_IMG_PREVIEW, m_ImagePreview);
 }
 
 BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
@@ -66,6 +67,7 @@ BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_DIR_TREE, &CmsdocimgextractorDlg::OnTvnSelchangedDirTree)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_EXTRACT_BTN, &CmsdocimgextractorDlg::OnBnClickedExtractBtn)
+	ON_NOTIFY(TVN_SELCHANGED, IDC_IMG_TREE, &CmsdocimgextractorDlg::OnTvnSelchangedImgTree)
 END_MESSAGE_MAP()
 
 BOOL CmsdocimgextractorDlg::OnInitDialog()
@@ -116,9 +118,9 @@ void CmsdocimgextractorDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CmsdocimgextractorDlg::OnPaint()
 {
+	CPaintDC dc(this);
 	if (IsIconic())
 	{
-		CPaintDC dc(this);
 
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
@@ -133,6 +135,13 @@ void CmsdocimgextractorDlg::OnPaint()
 	}
 	else
 	{
+		if (m_imageCtrl.IsNull() == FALSE)
+		{
+			dc.SetStretchBltMode(COLORONCOLOR);
+			RECT rect;
+			m_ImagePreview.GetWindowRect(&rect);
+			m_imageCtrl.Draw(dc, rect);
+		}
 		CDialogEx::OnPaint();
 	}
 }
@@ -340,4 +349,46 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 
 		MessageBox(L"추출이 완료되었습니다!");
 	}
+}
+
+
+void CmsdocimgextractorDlg::OnTvnSelchangedImgTree(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
+	CString imgPath = m_ImageTree.GetItemText(hItem);
+	HTREEITEM hParent = m_ImageTree.GetParentItem(hItem);
+	CString filePath = m_ImageTree.GetItemText(hParent);
+
+	auto pair = m_map.Lookup(filePath);
+	if (pair == nullptr)
+	{
+		// Todo: handling error
+		return;
+	}
+	CImageInfo* info = nullptr;
+	if (pair->m_value->Lookup(imgPath, &info) == FALSE)
+	{
+		// Todo: handling error
+		return;
+	}
+	CImage img;
+	ULONG result;
+	HGLOBAL h_buffer = GlobalAlloc(GMEM_MOVEABLE, 1024 * 1024 * 8);
+	
+	if (h_buffer != NULL) 
+	{   
+		IStream* p_stream = NULL;
+		if (CreateStreamOnHGlobal(h_buffer, FALSE, &p_stream) == S_OK) 
+		{
+			p_stream->Read((void*)info->GetDataRef(), info->GetDataSize(), &result);
+			if (m_imageCtrl.IsNull() == FALSE)
+				m_imageCtrl.Destroy();
+			img.Load(p_stream);
+			p_stream->Release();  
+		}
+		GlobalFree(h_buffer); 
+	}
+	*pResult = 0;
 }

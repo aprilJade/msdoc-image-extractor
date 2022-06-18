@@ -11,11 +11,9 @@
 #define IDC_BUTTON1                     1004
 #define IDC_EXTRACT_BTN                 1004
 #define IDC_IMG_TREE                    1007
-#define IDC_PREVIEW                     1008
 #define IDC_IMG_PREVIEW                 1008
 #define IDC_BUTTON2                     1009
 #define IDC_SETTRING_BTN                1009
-#define IDC_SEL_PATH_EDIT               1010
 #define IDC_SEL_ALL_BTN                 1011
 #define IDC_DIR_TREE                    1012
 
