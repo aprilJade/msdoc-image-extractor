@@ -54,7 +54,7 @@ private:
 	CAtlMap<CString, CImageInfos*, CStringElementTraits<CString>> m_map;
 
 	CImage m_imageCtrl;
-
+	RECT m_previewRect;
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExtractBtn();

@@ -97,7 +97,8 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 	m_docParser = new CDocParser();
 	
 	InitializeFileTree();
-
+	m_ImagePreview.GetWindowRect(&m_previewRect);
+	ScreenToClient(&m_previewRect);
 	CZlibWrapper zlib;
 
 	return TRUE; 
@@ -137,10 +138,9 @@ void CmsdocimgextractorDlg::OnPaint()
 	{
 		if (m_imageCtrl.IsNull() == FALSE)
 		{
-			dc.SetStretchBltMode(COLORONCOLOR);
-			RECT rect;
-			m_ImagePreview.GetWindowRect(&rect);
-			m_imageCtrl.Draw(dc, rect);
+			//dc.SetStretchBltMode(COLORONCOLOR);
+			
+			m_imageCtrl.Draw(dc, m_previewRect);
 		}
 		CDialogEx::OnPaint();
 	}
@@ -320,6 +320,8 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 			hChild = m_ImageTree.GetChildItem(hParent);
 			while (hChild)
 			{
+				//CString str = m_ImageTree.GetItemText(hChild);
+				//BOOL res = m_ImageTree.GetCheck(hChild);
 				if (m_ImageTree.GetCheck(hChild))
 				{
 					CString filePath = m_ImageTree.GetItemText(hParent);
@@ -341,10 +343,10 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 					fileCtrl.Write(info->GetDataRef(), info->GetDataSize());
 					fileCtrl.Close();
 				}
-				hChild = m_ImageTree.GetNextVisibleItem(hChild);
+				hChild = m_ImageTree.GetNextSiblingItem(hChild);
 			}
 
-			hParent = m_ImageTree.GetNextVisibleItem(hParent);;
+			hParent = m_ImageTree.GetNextSiblingItem(hParent);
 		}
 
 		MessageBox(L"추출이 완료되었습니다!");
@@ -355,7 +357,6 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 void CmsdocimgextractorDlg::OnTvnSelchangedImgTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
-	// TODO: Add your control notification handler code here
 	HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 	CString imgPath = m_ImageTree.GetItemText(hItem);
 	HTREEITEM hParent = m_ImageTree.GetParentItem(hItem);
@@ -373,19 +374,22 @@ void CmsdocimgextractorDlg::OnTvnSelchangedImgTree(NMHDR* pNMHDR, LRESULT* pResu
 		// Todo: handling error
 		return;
 	}
-	CImage img;
 	ULONG result;
+	// Todo: alloc global buffer just once at application started. and reuse buffer.
 	HGLOBAL h_buffer = GlobalAlloc(GMEM_MOVEABLE, 1024 * 1024 * 8);
-	
+	auto a = info->GetDataRef();
 	if (h_buffer != NULL) 
 	{   
 		IStream* p_stream = NULL;
 		if (CreateStreamOnHGlobal(h_buffer, FALSE, &p_stream) == S_OK) 
 		{
-			p_stream->Read((void*)info->GetDataRef(), info->GetDataSize(), &result);
+			p_stream->Write((void*)info->GetDataRef(), info->GetDataSize(), &result);
 			if (m_imageCtrl.IsNull() == FALSE)
 				m_imageCtrl.Destroy();
-			img.Load(p_stream);
+			
+			if (m_imageCtrl.Load(p_stream) == S_OK)
+				InvalidateRect(&m_previewRect, FALSE);
+			
 			p_stream->Release();  
 		}
 		GlobalFree(h_buffer); 
