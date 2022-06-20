@@ -48,6 +48,12 @@
     <ClInclude Include="ExtractDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SettingDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="msdoc img extractor.cpp">
@@ -74,6 +80,12 @@
     <ClCompile Include="ExtractDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SettingDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="msdocimgextractor.rc">
@@ -88,6 +100,18 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\README.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\locale.ko.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\profile.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\locale.en.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\locale.jp.ini">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -197,6 +197,8 @@
     <ClInclude Include="msdoc img extractorDlg.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SettingControl.h" />
+    <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ZlibWrapper.h" />
   </ItemGroup>
@@ -213,6 +215,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SettingControl.cpp" />
+    <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="ZlibWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -221,7 +225,11 @@
   <ItemGroup>
     <None Include="..\.gitignore" />
     <None Include="..\README.md" />
+    <None Include="res\locale.en.ini" />
+    <None Include="res\locale.jp.ini" />
+    <None Include="res\locale.ko.ini" />
     <None Include="res\msdocimgextractor.rc2" />
+    <None Include="res\profile.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\msdoc img extractor.ico" />

@@ -14,7 +14,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx
@@ -32,6 +31,46 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 };
+
+void CmsdocimgextractorDlg::InitLoacale()
+{
+	CString iniName;
+	switch (m_settingCtrl->GetLocale())
+	{
+	case LOCALE::KO:
+		iniName = L"res\\locale.ko.ini";
+		break;
+	case LOCALE::EN:
+		iniName = L"res\\locale.en.ini";
+		break;
+	case LOCALE::JP:
+		iniName = L"res\\locale.jp.ini";
+		break;
+	default:
+		iniName = L"res\\locale.ko.ini";
+		break;
+	}
+	WCHAR buf[64];
+
+	ZeroMemory(buf, 64);
+	GetPrivateProfileString(L"MAIN", L"title", NULL, buf, 64, iniName);
+	this->SetWindowTextW(buf);
+
+	ZeroMemory(buf, 64);
+	GetPrivateProfileString(L"MAIN", L"setting", NULL, buf, 64, iniName);
+	m_settingBtn.SetWindowTextW(buf);
+
+	ZeroMemory(buf, 64);
+	GetPrivateProfileString(L"MAIN", L"selAll", NULL, buf, 64, iniName);
+	m_selAllBtn.SetWindowTextW(buf);
+
+	ZeroMemory(buf, 64);
+	GetPrivateProfileString(L"MAIN", L"unselAll", NULL, buf, 64, iniName);
+
+	ZeroMemory(buf, 64);
+	GetPrivateProfileString(L"MAIN", L"extract", NULL, buf, 64, iniName);
+	m_extractBtn.SetWindowTextW(buf);
+}
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 {
@@ -58,6 +97,8 @@ void CmsdocimgextractorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_IMG_TREE, m_ImageTree);
 	DDX_Control(pDX, IDC_IMG_PREVIEW, m_ImagePreview);
 	DDX_Control(pDX, IDC_SEL_ALL_BTN, m_selAllBtn);
+	DDX_Control(pDX, IDC_SETTING_BTN, m_settingBtn);
+	DDX_Control(pDX, IDC_EXTRACT_BTN, m_extractBtn);
 }
 
 BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
@@ -92,9 +133,14 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
 		}
 	}
-	someDlg.DoModal();
+
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
+
+	m_settingCtrl = new CSettingControl();
+
+	InitLoacale();
+
 	SetBackgroundColor(RGB(255, 255, 255));
 	m_docParser = new CDocParser();
 	
@@ -324,6 +370,7 @@ void CmsdocimgextractorDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 
 	delete m_docParser;
+	delete m_settingCtrl;
 
 	POSITION pos = m_map.GetStartPosition();
 	CAtlMap<CString, CImageInfos*, CStringElementTraits<CString>>::CPair* pair = nullptr;

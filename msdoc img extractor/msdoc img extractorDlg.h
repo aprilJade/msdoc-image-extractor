@@ -6,6 +6,8 @@
 
 #include "DocParser.h"
 #include "ExtractDlg.h"
+#include "SettingDlg.h"
+#include "SettingControl.h"
 
 #define SUPPORT_EXT_CNT 3
 
@@ -59,10 +61,16 @@ private:
 	RECT m_previewRect;
 
 	CButton m_selAllBtn;
+	CButton m_settingBtn;
+	CButton m_extractBtn;
 
 	void GetPerfectFitRect(int imgWidth, int height, RECT frame, LPRECT fitRect);
 private:
-	CExtractDlg someDlg;
+	CExtractDlg m_extractDlg;
+	CSettingDlg* m_settingDlg;
+	CSettingControl* m_settingCtrl;
+
+	void InitLoacale();
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExtractBtn();

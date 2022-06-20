@@ -28,6 +28,8 @@ void CExtractDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CExtractDlg, CDialogEx)
+	ON_BN_CLICKED(ID_YES_BTN, &CExtractDlg::OnBnClickedYesBtn)
+	ON_BN_CLICKED(ID_NO_BTN, &CExtractDlg::OnBnClickedNoBtn)
 END_MESSAGE_MAP()
 
 
@@ -40,4 +42,15 @@ BOOL CExtractDlg::OnInitDialog()
 	SetWindowText(L"안내");
 
 	return TRUE;
+}
+
+void CExtractDlg::OnBnClickedYesBtn()
+{
+	CDialogEx::OnOK();
+}
+
+
+void CExtractDlg::OnBnClickedNoBtn()
+{
+	CDialogEx::OnCancel();
 }
