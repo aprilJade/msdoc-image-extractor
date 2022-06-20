@@ -138,11 +138,40 @@ void CmsdocimgextractorDlg::OnPaint()
 	{
 		if (m_imageCtrl.IsNull() == FALSE)
 		{
-			//dc.SetStretchBltMode(COLORONCOLOR);
-			
-			m_imageCtrl.Draw(dc, m_previewRect);
+			RECT rect;
+			BITMAP bmpInfo;
+			GetObject(m_imageCtrl, sizeof(BITMAP), &bmpInfo);
+			GetPerfectFitRect(bmpInfo.bmWidth, bmpInfo.bmHeight, m_previewRect, &rect);
+			dc.SetStretchBltMode(COLORONCOLOR);
+			m_imageCtrl.Draw(dc, rect);
 		}
 		CDialogEx::OnPaint();
+	}
+}
+
+void CmsdocimgextractorDlg::GetPerfectFitRect(int imgWidth, int imgHeight, RECT frame, LPRECT fitRect)
+{
+	int frameWidth = frame.right - frame.left;
+	int frameHeight = frame.bottom -frame.top;
+	float scaleValue = 0.0;
+	int offset = 0;
+
+	CopyRect(fitRect, &frame);
+	if (imgWidth - imgHeight > 0)
+	{
+		scaleValue = (float)frameWidth / (float)imgWidth;
+		int newHeight = (float)imgHeight * scaleValue;
+		offset = (frameHeight - newHeight) / 2;
+		fitRect->top += offset;
+		fitRect->bottom -= offset;
+	} 
+	else
+	{
+		scaleValue = (float)frameHeight / (float)imgHeight;
+		int newWidth = (float)imgWidth * scaleValue;
+		offset = (frameWidth - newWidth) / 2;
+		fitRect->left += offset;
+		fitRect->right -= offset;
 	}
 }
 

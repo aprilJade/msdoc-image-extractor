@@ -55,6 +55,8 @@ private:
 
 	CImage m_imageCtrl;
 	RECT m_previewRect;
+
+	void GetPerfectFitRect(int imgWidth, int height, RECT frame, LPRECT fitRect);
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExtractBtn();
