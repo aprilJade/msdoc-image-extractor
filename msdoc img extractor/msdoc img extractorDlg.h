@@ -5,6 +5,7 @@
 #pragma once
 
 #include "DocParser.h"
+#include "ExtractDlg.h"
 
 #define SUPPORT_EXT_CNT 3
 
@@ -60,6 +61,8 @@ private:
 	CButton m_selAllBtn;
 
 	void GetPerfectFitRect(int imgWidth, int height, RECT frame, LPRECT fitRect);
+private:
+	CExtractDlg someDlg;
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExtractBtn();

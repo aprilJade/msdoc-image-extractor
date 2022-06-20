@@ -92,7 +92,7 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
 		}
 	}
-
+	someDlg.DoModal();
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 	SetBackgroundColor(RGB(255, 255, 255));
