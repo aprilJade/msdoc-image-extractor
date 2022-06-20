@@ -57,6 +57,7 @@ void CmsdocimgextractorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_DIR_TREE, m_fileTree);
 	DDX_Control(pDX, IDC_IMG_TREE, m_ImageTree);
 	DDX_Control(pDX, IDC_IMG_PREVIEW, m_ImagePreview);
+	DDX_Control(pDX, IDC_SEL_ALL_BTN, m_selAllBtn);
 }
 
 BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
@@ -68,6 +69,7 @@ BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_EXTRACT_BTN, &CmsdocimgextractorDlg::OnBnClickedExtractBtn)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_IMG_TREE, &CmsdocimgextractorDlg::OnTvnSelchangedImgTree)
+	ON_BN_CLICKED(IDC_SEL_ALL_BTN, &CmsdocimgextractorDlg::OnBnClickedSelAllBtn)
 END_MESSAGE_MAP()
 
 BOOL CmsdocimgextractorDlg::OnInitDialog()
@@ -361,9 +363,30 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 						// Todo: handling fail to lookup
 						continue;
 					}
+					// Todo: If file exist already, then ask to user how to handle.
+					// 1. Replace file
+					// 2. Rename file (eg. add number to file name or append "- copy")
+					// 3. Default is append -copy
 					CString imagePath = m_ImageTree.GetItemText(hChild);
 					CImageInfo* info = pair->m_value->GetValue(imagePath);
 					imagePath = imagePath.Right(imagePath.GetLength() - imagePath.ReverseFind(L'/') - 1);
+					
+					CString newFilePath = dirPath + L"\\" + imagePath;
+
+					// if replace or numbering copy setting value is invalid
+					// ask to user...
+					if (MessageBox(L"중복된 파일이 있어요. 덮어쓰시겠어요?", L"알림", MB_YESNO) == IDNO)
+					{
+						for (int i = 0; PathFileExists(newFilePath); i++) // when select or set numbering copy
+						{
+							size_t idx = imagePath.GetLength() - imagePath.ReverseFind(L'.');
+							CString ext = imagePath.Right(idx - 1);
+							CString name = imagePath.Left(idx + 1);
+							CString numbering;
+							numbering.Format(L"(%d).", i);
+							newFilePath = dirPath + L"\\" + name + numbering + ext;
+						}
+					}
 
 					if (fileCtrl.Open(dirPath + L"\\" + imagePath, CFile::modeCreate | CFile::modeWrite) == FALSE)
 					{
@@ -375,11 +398,10 @@ void CmsdocimgextractorDlg::OnBnClickedExtractBtn()
 				}
 				hChild = m_ImageTree.GetNextSiblingItem(hChild);
 			}
-
 			hParent = m_ImageTree.GetNextSiblingItem(hParent);
 		}
 
-		MessageBox(L"추출이 완료되었습니다!");
+		MessageBox(L"추출이 완료되었어요!", L"안내", MB_OK);
 	}
 }
 
@@ -425,4 +447,25 @@ void CmsdocimgextractorDlg::OnTvnSelchangedImgTree(NMHDR* pNMHDR, LRESULT* pResu
 		GlobalFree(h_buffer); 
 	}
 	*pResult = 0;
+}
+
+
+void CmsdocimgextractorDlg::OnBnClickedSelAllBtn()
+{
+	HTREEITEM hItem = m_ImageTree.GetFirstVisibleItem();
+	if (bAllChecked == FALSE)
+	{
+		m_selAllBtn.SetWindowTextW(L"전체 해제");
+		bAllChecked = TRUE;
+	}
+	else
+	{
+		m_selAllBtn.SetWindowTextW(L"전체 선택");
+		bAllChecked = FALSE;
+	}
+	while (hItem)
+	{
+		m_ImageTree.SetCheck(hItem, bAllChecked);
+		hItem = m_ImageTree.GetNextVisibleItem(hItem);
+	}
 }

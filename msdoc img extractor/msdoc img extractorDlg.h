@@ -39,6 +39,7 @@ public:
 	CTreeCtrl m_fileTree;
 	CTreeCtrl m_ImageTree;
 	CStatic m_ImagePreview;
+	BOOL bAllChecked = FALSE;
 
 	void InitializeFileTree();
 	CString GetSelectedItemPath(HTREEITEM hItem);
@@ -56,9 +57,12 @@ private:
 	CImage m_imageCtrl;
 	RECT m_previewRect;
 
+	CButton m_selAllBtn;
+
 	void GetPerfectFitRect(int imgWidth, int height, RECT frame, LPRECT fitRect);
 public:
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedExtractBtn();
 	afx_msg void OnTvnSelchangedImgTree(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBnClickedSelAllBtn();
 };
