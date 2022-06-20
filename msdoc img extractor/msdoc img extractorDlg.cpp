@@ -93,7 +93,7 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
-	
+	SetBackgroundColor(RGB(255, 255, 255));
 	m_docParser = new CDocParser();
 	
 	InitializeFileTree();
@@ -141,6 +141,7 @@ void CmsdocimgextractorDlg::OnPaint()
 			RECT rect;
 			BITMAP bmpInfo;
 			GetObject(m_imageCtrl, sizeof(BITMAP), &bmpInfo);
+			dc.FillSolidRect(&m_previewRect, RGB(255, 255, 255));
 			GetPerfectFitRect(bmpInfo.bmWidth, bmpInfo.bmHeight, m_previewRect, &rect);
 			dc.SetStretchBltMode(COLORONCOLOR);
 			m_imageCtrl.Draw(dc, rect);
