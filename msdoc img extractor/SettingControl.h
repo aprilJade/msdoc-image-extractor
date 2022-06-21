@@ -14,6 +14,7 @@ enum OVERWRITE
 	ALWAYS_CHANGE_FILE_NAME
 };
 
+
 class CSettingControl
 {
 public:
@@ -34,10 +35,45 @@ public:
 	void SetStartDirectory(const CString);
 
 private:
-	LOCALE m_locale;
-	BOOL b_compress;
-	OVERWRITE m_overwrite;
-	CString m_startDirectory;
+	class COptionValues
+	{
+	public:
+		BOOL operator==(COptionValues& ref)
+		{
+			if (this->locale != ref.locale)
+				return FALSE;
+			if (this->bCompress != ref.bCompress)
+				return FALSE;
+			if (this->overwrite != ref.overwrite)
+				return FALSE;
+			if (this->startDir != ref.startDir)
+				return FALSE;
+			return TRUE;
+		};
+
+		BOOL operator!=(COptionValues& ref)
+		{
+			return *this == ref ? FALSE : TRUE;
+		};
+
+		COptionValues& operator=(COptionValues& ref)
+		{
+			this->locale = ref.locale;
+			this->bCompress = ref.bCompress;
+			this->overwrite = ref.overwrite;
+			this->startDir = ref.startDir;
+			return *this;
+		};
+
+		LOCALE locale;
+		BOOL bCompress;
+		OVERWRITE overwrite;
+		CString startDir;
+	};
+
+	COptionValues optionValues;
+	COptionValues optionValuesBuffer;
+
 	CString m_settingFileName;
 	const WCHAR* STR_OPTION = L"OPTION";
 };

@@ -8,12 +8,12 @@ CSettingControl::CSettingControl()
 		Load();
 	else
 	{
-		m_locale = LOCALE::KO;
-		b_compress = FALSE;
-		m_overwrite = OVERWRITE::ALWAYS_ASK;
+		optionValues.locale = LOCALE::KO;
+		optionValues.bCompress = FALSE;
+		optionValues.overwrite = OVERWRITE::ALWAYS_ASK;
 		WCHAR path[MAX_PATH] = { 0 };
 		SHGetSpecialFolderPath(HWND_DESKTOP, path, CSIDL_DESKTOP, FALSE);
-		m_startDirectory = path;
+		optionValues.startDir = path;
 	}
 }
 
@@ -24,7 +24,67 @@ CSettingControl::~CSettingControl()
 
 BOOL CSettingControl::Save()
 {
-	// not implemented yet
+	CString value;
+
+	if (optionValues.locale != optionValuesBuffer.locale)
+	{
+		optionValues.locale = optionValuesBuffer.locale;
+		switch (optionValues.locale)
+		{
+		case LOCALE::KO:
+			value = L"KO";
+			break;
+		case LOCALE::EN:
+			value = L"EN";
+			break;
+		case LOCALE::JP:
+			value = L"JP";
+			break;
+		default:
+			value = L"KO";
+			break;
+		}
+		WritePrivateProfileString(STR_OPTION, L"locale", value, m_settingFileName);
+	}
+
+	if (optionValues.bCompress != optionValuesBuffer.bCompress)
+	{
+		optionValues.bCompress = optionValuesBuffer.bCompress;
+		if (optionValues.bCompress)
+			value = L"true";
+		else
+			value = L"false";
+		WritePrivateProfileString(STR_OPTION, L"compress", value, m_settingFileName);
+	}
+
+	if (optionValues.overwrite != optionValuesBuffer.overwrite)
+	{
+		optionValues.overwrite = optionValuesBuffer.overwrite;
+		switch (optionValues.overwrite)
+		{
+		case OVERWRITE::ALWAYS_ASK:
+			value = L"ALWAYS_ASK";
+			break;
+		case OVERWRITE::ALWAYS_OVERWRITE:
+			value = L"ALWAYS_OVERWRITE";
+			break;
+		case OVERWRITE::ALWAYS_CHANGE_FILE_NAME:
+			value = L"ALWAYS_CHANGE_FILE_NAME";
+			break;
+		default:
+			value = L"ALWAYS_ASK";
+			break;
+		}
+		WritePrivateProfileString(STR_OPTION, L"overwrite", value, m_settingFileName);
+	}
+
+	if (optionValues.startDir != optionValuesBuffer.startDir)
+	{
+		optionValues.startDir = optionValuesBuffer.startDir;
+		value = optionValues.startDir;
+		WritePrivateProfileString(STR_OPTION, L"startPath", value, m_settingFileName);
+	}
+
 	return TRUE;
 }
 
@@ -35,13 +95,13 @@ BOOL CSettingControl::Load()
 	ZeroMemory(buf, 64);
 	GetPrivateProfileString(STR_OPTION, L"locale", NULL, buf, 64, m_settingFileName);
 	if (wcscmp(buf, L"KO") == 0)
-		m_locale = LOCALE::KO;
+		optionValues.locale = LOCALE::KO;
 	else if (wcscmp(buf, L"EN") == 0)
-		m_locale = LOCALE::EN;
+		optionValues.locale = LOCALE::EN;
 	else if (wcscmp(buf, L"JP") == 0)
-		m_locale = LOCALE::JP;
+		optionValues.locale = LOCALE::JP;
 	else
-		m_locale = LOCALE::KO;
+		optionValues.locale = LOCALE::KO;
 
 	ZeroMemory(buf, 64);
 	GetPrivateProfileString(STR_OPTION, L"startPath", NULL, buf, 64, m_settingFileName);
@@ -49,70 +109,72 @@ BOOL CSettingControl::Load()
 	{
 		WCHAR path[MAX_PATH] = { 0 };
 		SHGetSpecialFolderPath(HWND_DESKTOP, path, CSIDL_DESKTOP, FALSE);
-		m_startDirectory = path;
+		optionValues.startDir = path;
 	}
 	else
-		m_startDirectory = buf;
+		optionValues.startDir = buf;
 
 	ZeroMemory(buf, 64);
 	GetPrivateProfileString(STR_OPTION, L"compress", NULL, buf, 64, m_settingFileName);
 	if (wcscmp(buf, L"true") == 0)
-		b_compress = TRUE;
+		optionValues.bCompress = TRUE;
 	else if (wcscmp(buf, L"false") == 0)
-		b_compress = FALSE;
+		optionValues.bCompress = FALSE;
 	else
-		b_compress = FALSE;
+		optionValues.bCompress = FALSE;
 
 	ZeroMemory(buf, 64);
 	GetPrivateProfileString(STR_OPTION, L"overwrite", NULL, buf, 64, m_settingFileName);
 	if (wcscmp(buf, L"ALWAYS_ASK") == 0)
-		m_overwrite = OVERWRITE::ALWAYS_ASK;
+		optionValues.overwrite = OVERWRITE::ALWAYS_ASK;
 	else if (wcscmp(buf, L"ALWAYS_OVERWRITE") == 0)
-		m_overwrite = OVERWRITE::ALWAYS_OVERWRITE;
+		optionValues.overwrite = OVERWRITE::ALWAYS_OVERWRITE;
 	else if (wcscmp(buf, L"ALWAYS_CHANGE_FILE_NAME") == 0)
-		m_overwrite = OVERWRITE::ALWAYS_CHANGE_FILE_NAME;
+		optionValues.overwrite = OVERWRITE::ALWAYS_CHANGE_FILE_NAME;
 	else
-		m_overwrite = OVERWRITE::ALWAYS_ASK;
+		optionValues.overwrite = OVERWRITE::ALWAYS_ASK;
+
+	optionValuesBuffer = optionValues;
 
 	return TRUE;
 }
 
 LOCALE CSettingControl::GetLocale() const
 {
-	return m_locale;
+	return optionValuesBuffer.locale;
 }
 
 BOOL CSettingControl::GetCompress() const
 {
-	return b_compress;
+	return optionValuesBuffer.bCompress;
 }
 
 OVERWRITE CSettingControl::GetOverwrite() const
 {
-	return m_overwrite;
+	return optionValuesBuffer.overwrite;
 }
 
 CString CSettingControl::GetStartDirectory() const
 {
-	return m_startDirectory;
+	return optionValuesBuffer.startDir;
 }
 
 void CSettingControl::SetLocale(const LOCALE value)
 {
-	m_locale = value;
+	optionValuesBuffer.locale = value;
 }
 
 void CSettingControl::SetCompress(const BOOL value)
 {
-	b_compress = value;
+	optionValuesBuffer.bCompress = value;
 }
 
 void CSettingControl::SetOverwirte(const OVERWRITE value)
 {
-	m_overwrite = value;
+	optionValuesBuffer.overwrite = value;
 }
 
 void CSettingControl::SetStartDirectory(const CString value)
 {
-	m_startDirectory = value;
+	optionValuesBuffer.startDir = value;
 }
