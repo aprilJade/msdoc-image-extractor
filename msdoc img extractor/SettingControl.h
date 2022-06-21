@@ -17,47 +17,6 @@ enum OVERWRITE
 class CSettingControl
 {
 public:
-
-	struct STR_LOCALE
-	{
-		struct EXTRACT_SELECT_DIALOG
-		{
-			CString strText;
-			CString checkBox;
-			CString yes;
-			CString no;
-			CString title;
-		};
-		struct MAIN_DIALOG
-		{
-			CString title;
-			CString setting;
-			CString selAll;
-			CString extract;
-		};
-		struct SETTING_DIALOG
-		{
-			CString title;
-			CString startPath;
-
-			CString compressOrNot;
-			CString compress;
-			CString notCompress;
-			
-			CString language;
-			CString handlingOverwrite;
-			CString alwaysAsk;
-			CString alwaysOverwrite;
-			CString alwaysChangeName;
-
-			CString folderSelect;
-			CString apply;
-			CString confirm;
-			CString close;
-		};
-	};
-
-public:
 	CSettingControl();
 	~CSettingControl();
 
@@ -80,5 +39,6 @@ private:
 	OVERWRITE m_overwrite;
 	CString m_startDirectory;
 	CString m_settingFileName;
+	const WCHAR* STR_OPTION = L"OPTION";
 };
 
