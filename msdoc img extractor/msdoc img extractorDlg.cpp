@@ -111,6 +111,7 @@ BEGIN_MESSAGE_MAP(CmsdocimgextractorDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_EXTRACT_BTN, &CmsdocimgextractorDlg::OnBnClickedExtractBtn)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_IMG_TREE, &CmsdocimgextractorDlg::OnTvnSelchangedImgTree)
 	ON_BN_CLICKED(IDC_SEL_ALL_BTN, &CmsdocimgextractorDlg::OnBnClickedSelAllBtn)
+	ON_BN_CLICKED(IDC_SETTING_BTN, &CmsdocimgextractorDlg::OnBnClickedSettingBtn)
 END_MESSAGE_MAP()
 
 BOOL CmsdocimgextractorDlg::OnInitDialog()
@@ -138,7 +139,6 @@ BOOL CmsdocimgextractorDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);
 
 	m_settingCtrl = new CSettingControl();
-
 	InitLoacale();
 
 	SetBackgroundColor(RGB(255, 255, 255));
@@ -515,4 +515,11 @@ void CmsdocimgextractorDlg::OnBnClickedSelAllBtn()
 		m_ImageTree.SetCheck(hItem, bAllChecked);
 		hItem = m_ImageTree.GetNextVisibleItem(hItem);
 	}
+}
+
+
+void CmsdocimgextractorDlg::OnBnClickedSettingBtn()
+{
+	// TODO: Add your control notification handler code here
+	m_settingDlg.DoModal(m_settingCtrl->GetLocale());
 }

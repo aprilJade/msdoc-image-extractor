@@ -26,10 +26,19 @@
 #define ID_YES_BTN                      1016
 #define IDC_SETDLG_APPLY_BTN            1017
 #define IDC_SETDLG_DIR_PATH             1018
-#define IDC_SETDLG_COMPOPT_COMBO        1019
-#define IDC_SETDLG_LOCALE_COMBO         1020
-#define IDC_SETDLG_OVERLAP_COMBO        1021
 #define IDC_SETDLG_DIRSEL_BTN           1022
+#define IDC_STATIC_BASIC_PATH           1023
+#define IDC_LANG_KO_RAD                 1027
+#define IDC_LANG_EN_RAD                 1028
+#define IDC_LANG_JP_RAD                 1029
+#define IDC_ALWAYS_ASK_RAD              1030
+#define IDC_ALWAYS_OVER_RAD             1031
+#define IDC_ALWAYS_CHANGE_RAD           1032
+#define IDC_COMP_NO_RAD                 1033
+#define IDC_COMP_ZIP_RAD                1034
+#define IDC_STATIC_OVERWRITE            1035
+#define IDC_STATIC_LANGUAGE             1036
+#define IDC_STATIC_COMPRESS             1037
 
 // Next default values for new objects
 // 
@@ -37,7 +46,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1023
+#define _APS_NEXT_CONTROL_VALUE         1038
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

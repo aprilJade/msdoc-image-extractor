@@ -66,8 +66,8 @@ private:
 
 	void GetPerfectFitRect(int imgWidth, int height, RECT frame, LPRECT fitRect);
 private:
-	CExtractDlg m_extractDlg;
-	CSettingDlg* m_settingDlg;
+	CExtractDlg* m_extractDlg;
+	CSettingDlg m_settingDlg;
 	CSettingControl* m_settingCtrl;
 
 	void InitLoacale();
@@ -76,4 +76,5 @@ public:
 	afx_msg void OnBnClickedExtractBtn();
 	afx_msg void OnTvnSelchangedImgTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedSelAllBtn();
+	afx_msg void OnBnClickedSettingBtn();
 };
